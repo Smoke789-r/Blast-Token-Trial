@@ -69,13 +69,20 @@ async function approveBOGEToken() {
         return;
     }
 
+    const amount = document.getElementById('amount').value;
+    if (!amount) {
+        alert('Please enter an amount');
+        return;
+    }
+
     console.log("User account:", userAccount);
+    console.log("Amount to approve:", amount);
+
     const bogeTokenContract = new web3.eth.Contract(BOGE_TOKEN_ABI, BOGE_TOKEN_ADDRESS);
 
     try {
-        const amount = web3.utils.toWei('1000000', 'ether'); // Approve a large amount
-        console.log("Amount to approve:", amount);
-        await bogeTokenContract.methods.approve(CLAIM_CONTRACT_ADDRESS, amount).send({ from: userAccount });
+        const amountInWei = web3.utils.toWei(amount, 'ether');
+        await bogeTokenContract.methods.approve(CLAIM_CONTRACT_ADDRESS, amountInWei).send({ from: userAccount });
         alert('BOGE token approval successful!');
         console.log("BOGE token approval successful!");
     } catch (error) {
