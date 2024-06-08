@@ -5,9 +5,9 @@ async function connectWallet() {
         window.web3 = new Web3(window.ethereum);
         try {
             // Always prompt user to select an account
-            const accounts = await window.ethereum.request({ method: 'wallet_requestPermissions', params: [{ eth_accounts: {} }] });
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             if (accounts.length > 0) {
-                userAccount = accounts[0].caveats[0].value[0]; // Extract the first account from the permissions result
+                userAccount = accounts[0];
                 document.getElementById('walletAddress').innerText = `Connected: ${userAccount}`;
                 document.getElementById('connectWalletButton').style.display = 'none';
                 document.getElementById('disconnectWalletButton').style.display = 'block';
