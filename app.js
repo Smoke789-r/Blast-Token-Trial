@@ -2,8 +2,10 @@ let userAccount;
 
 async function connectWallet() {
     if (window.ethereum) {
-        window.web3 = new Web3(window.ethereum);
         try {
+            // Reset the provider to ensure the prompt appears
+            window.ethereum.autoRefreshOnNetworkChange = false;
+
             // Always prompt user to select an account
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             if (accounts.length > 0) {
