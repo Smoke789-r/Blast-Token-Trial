@@ -12,12 +12,17 @@ async function connectWallet() {
                 document.getElementById('connectWalletButton').style.display = 'none';
                 document.getElementById('disconnectWalletButton').style.display = 'block';
                 console.log("Wallet connected:", userAccount);
+            } else {
+                console.error('No accounts found');
+                alert('No accounts found. Please connect to Rabby Wallet.');
             }
         } catch (error) {
             console.error('User denied account access', error);
+            alert('User denied account access');
         }
     } else {
         console.log('Non-Ethereum browser detected. You should consider trying MetaMask or Rabby Wallet!');
+        alert('Non-Ethereum browser detected. You should consider trying MetaMask or Rabby Wallet!');
     }
 }
 
