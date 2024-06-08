@@ -1,5 +1,7 @@
 const BOGE_TOKEN_ADDRESS = '0x72a06F32B46DCc9B8B64Bed1f299E3c92A83309b';
 const CONTRACT_ADDRESS = '0x380Cc13f7Bbe692A4F95DEA59091b810e7C37B64';
+let userAccount;
+
 const ABI = [
     {
         "constant": true,
@@ -71,12 +73,16 @@ const ABI = [
     }
 ];
 
-window.addEventListener('load', async () => {
+async function connectWallet() {
     if (window.ethereum) {
         window.web3 = new Web3(window.ethereum);
         try {
-            await window.ethereum.request({ method: 'eth_requestAccounts' });
-            console.log("Rabby Wallet connected");
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            userAccount = accounts[0];
+            document.getElementById('walletAddress').innerText = `Connected: ${userAccount}`;
+            document.getElementById('connectWalletButton').style.display = 'none';
+            document.getElementById('disconnectWalletButton').style.display = 'block';
+            console.log("Wallet connected:", userAccount);
         } catch (error) {
             console.error('User denied account access');
         }
@@ -86,7 +92,15 @@ window.addEventListener('load', async () => {
     } else {
         console.log('Non-Ethereum browser detected. You should consider trying MetaMask or Rabby Wallet!');
     }
-});
+}
+
+function disconnectWallet() {
+    userAccount = null;
+    document.getElementById('walletAddress').innerText = '';
+    document.getElementById('connectWalletButton').style.display = 'block';
+    document.getElementById('disconnectWalletButton').style.display = 'none';
+    console.log("Wallet disconnected");
+}
 
 async function approveBOGEToken() {
     const amount = document.getElementById('amount').value;
