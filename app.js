@@ -89,6 +89,12 @@ window.addEventListener('load', async () => {
 });
 
 async function approveBOGEToken() {
+    const amount = document.getElementById('amount').value;
+    if (!amount) {
+        alert('Please enter an amount');
+        return;
+    }
+
     const accounts = await web3.eth.getAccounts();
     if (accounts.length === 0) {
         alert('No accounts found. Please connect Rabby Wallet.');
@@ -125,7 +131,8 @@ async function approveBOGEToken() {
     const bogeTokenContract = new web3.eth.Contract(BOGE_TOKEN_ABI, BOGE_TOKEN_ADDRESS);
 
     try {
-        await bogeTokenContract.methods.approve(CONTRACT_ADDRESS, web3.utils.toWei('1000000', 'ether')).send({ from: account });
+        // Directly use the input amount without conversion
+        await bogeTokenContract.methods.approve(CONTRACT_ADDRESS, amount).send({ from: account });
         alert('BOGE token approval successful!');
     } catch (error) {
         console.error('BOGE token approval failed', error);
