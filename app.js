@@ -75,11 +75,13 @@ window.addEventListener('load', async () => {
         window.web3 = new Web3(window.ethereum);
         try {
             await window.ethereum.enable();
+            console.log("MetaMask connected");
         } catch (error) {
             console.error('User denied account access');
         }
     } else if (window.web3) {
         window.web3 = new Web3(window.web3.currentProvider);
+        console.log("Legacy dapp browser connected");
     } else {
         console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
     }
@@ -92,16 +94,25 @@ async function claimTokens() {
         return;
     }
 
+    console.log("Amount to claim:", amount);
+
     const accounts = await web3.eth.getAccounts();
+    if (accounts.length === 0) {
+        alert('No accounts found. Please connect MetaMask or Rabby.');
+        return;
+    }
+
     const account = accounts[0];
+    console.log("Using account:", account);
 
     const contract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
 
     try {
+        console.log("Sending transaction...");
         await contract.methods.claim(web3.utils.toWei(amount, 'ether')).send({ from: account });
         alert('Claim successful!');
     } catch (error) {
-        console.error(error);
+        console.error('Claim failed', error);
         alert('Claim failed. See console for details.');
     }
 }
