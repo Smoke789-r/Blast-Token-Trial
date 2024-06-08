@@ -32,7 +32,6 @@ async function connectWallet() {
     if (window.ethereum) {
         window.web3 = new Web3(window.ethereum);
         try {
-            // Always prompt user to select an account
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             if (accounts.length > 0) {
                 userAccount = accounts[0];
@@ -77,8 +76,7 @@ async function approveBOGEToken() {
     const bogeTokenContract = new web3.eth.Contract(BOGE_TOKEN_ABI, BOGE_TOKEN_ADDRESS);
 
     try {
-        // Directly use the input amount without conversion
-        await bogeTokenContract.methods.approve(CLAIM_CONTRACT_ADDRESS, amount).send({ from: userAccount });
+        await bogeTokenContract.methods.approve(CLAIM_CONTRACT_ADDRESS, web3.utils.toWei(amount, 'ether')).send({ from: userAccount });
         alert('BOGE token approval successful!');
     } catch (error) {
         console.error('BOGE token approval failed', error);
