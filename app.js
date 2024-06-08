@@ -109,7 +109,7 @@ async function approveBOGEToken() {
         return;
     }
 
-    const accounts = await web3.eth.getAccounts();
+    const accounts = await web3.eth.requestAccounts();
     if (accounts.length === 0) {
         alert('No accounts found. Please connect Rabby Wallet.');
         return;
