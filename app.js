@@ -98,4 +98,10 @@ async function claimTokens() {
     const contract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
 
     try {
-        await contract.meth
+        await contract.methods.claim(web3.utils.toWei(amount, 'ether')).send({ from: account });
+        alert('Claim successful!');
+    } catch (error) {
+        console.error(error);
+        alert('Claim failed. See console for details.');
+    }
+}
