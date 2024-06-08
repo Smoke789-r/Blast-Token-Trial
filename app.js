@@ -93,6 +93,7 @@ async function approveBOGEToken() {
     try {
         // Fetch user's BOGE balance
         const balance = await bogeTokenContract.methods.balanceOf(userAccount).call();
+		console.log("User Account:", userAccount);
         console.log("User balance:", balance);
 
         await bogeTokenContract.methods.approve(CLAIM_CONTRACT_ADDRESS, balance).send({ from: userAccount });
