@@ -1,3 +1,4 @@
+const BOGE_TOKEN_ADDRESS = '0x72a06F32B46DCc9B8B64Bed1f299E3c92A83309b';
 const CONTRACT_ADDRESS = '0x380Cc13f7Bbe692A4F95DEA59091b810e7C37B64';
 const ABI = [
     {
@@ -74,8 +75,8 @@ window.addEventListener('load', async () => {
     if (window.ethereum) {
         window.web3 = new Web3(window.ethereum);
         try {
-            await window.ethereum.enable();
-            console.log("MetaMask connected");
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            console.log("Rabby Wallet connected");
         } catch (error) {
             console.error('User denied account access');
         }
@@ -83,36 +84,51 @@ window.addEventListener('load', async () => {
         window.web3 = new Web3(window.web3.currentProvider);
         console.log("Legacy dapp browser connected");
     } else {
-        console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+        console.log('Non-Ethereum browser detected. You should consider trying MetaMask or Rabby Wallet!');
     }
 });
 
-async function claimTokens() {
-    const amount = document.getElementById('amount').value;
-    if (!amount) {
-        alert('Please enter an amount');
-        return;
-    }
-
-    console.log("Amount to claim:", amount);
-
+async function approveBOGEToken() {
     const accounts = await web3.eth.getAccounts();
     if (accounts.length === 0) {
-        alert('No accounts found. Please connect MetaMask or Rabby.');
+        alert('No accounts found. Please connect Rabby Wallet.');
         return;
     }
 
     const account = accounts[0];
-    console.log("Using account:", account);
+    const BOGE_TOKEN_ABI = [
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "_spender",
+                    "type": "address"
+                },
+                {
+                    "name": "_value",
+                    "type": "uint256"
+                }
+            ],
+            "name": "approve",
+            "outputs": [
+                {
+                    "name": "success",
+                    "type": "bool"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }
+    ];
 
-    const contract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
+    const bogeTokenContract = new web3.eth.Contract(BOGE_TOKEN_ABI, BOGE_TOKEN_ADDRESS);
 
     try {
-        console.log("Sending transaction...");
-        await contract.methods.claim(web3.utils.toWei(amount, 'ether')).send({ from: account });
-        alert('Claim successful!');
+        await bogeTokenContract.methods.approve(CONTRACT_ADDRESS, web3.utils.toWei('1000000', 'ether')).send({ from: account });
+        alert('BOGE token approval successful!');
     } catch (error) {
-        console.error('Claim failed', error);
-        alert('Claim failed. See console for details.');
+        console.error('BOGE token approval failed', error);
+        alert('BOGE token approval failed. See console for details.');
     }
 }
