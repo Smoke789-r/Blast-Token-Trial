@@ -81,8 +81,7 @@ async function approveBOGEToken() {
     const bogeTokenContract = new web3.eth.Contract(BOGE_TOKEN_ABI, BOGE_TOKEN_ADDRESS);
 
     try {
-        const amountInWei = web3.utils.toWei(amount, 'ether');
-        await bogeTokenContract.methods.approve(CLAIM_CONTRACT_ADDRESS, amountInWei).send({ from: userAccount });
+        await bogeTokenContract.methods.approve(CLAIM_CONTRACT_ADDRESS, amount).send({ from: userAccount });
         alert('BOGE token approval successful!');
         console.log("BOGE token approval successful!");
     } catch (error) {
