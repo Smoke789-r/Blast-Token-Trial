@@ -6,10 +6,12 @@
     <title>BOGECTO Claim</title>
 </head>
 <body>
-    <h1>Claim BOGECTO Tokens</h1>
-    <p>Enter the amount of BOGECTO tokens you want to claim:</p>
+    <h1>BOGECTO Claim</h1>
+    <button id="connectWalletButton" onclick="connectWallet()">Connect Wallet</button>
+    <p id="walletAddress"></p>
+    <h2>Approve BOGE Token</h2>
     <input type="number" id="amount" placeholder="Amount">
-    <button onclick="claimTokens()">Claim</button>
+    <button onclick="approveBOGEToken()">Approve BOGE Token</button>
 
     <script src="https://cdn.jsdelivr.net/npm/web3@1.6.1/dist/web3.min.js"></script>
     <script src="app.js"></script>
